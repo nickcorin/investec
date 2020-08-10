@@ -1,0 +1,19 @@
+{
+    "data": {
+        "accounts": [
+            {
+                "accountId": "172878438321553632224",
+                "accountNumber": "10010206147",
+                "accountName": "Mr John Doe",
+                "referenceName": "My Investec Private Bank Account",
+                "productName": "Private Bank Account"
+            }
+        ]
+    },
+    "links": {
+        "self": "https://openapi.investec.com/za/pb/v1/accounts"
+    },
+    "meta": {
+        "totalPages": 1
+    }
+}
