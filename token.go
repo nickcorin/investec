@@ -1,34 +1,44 @@
 package investec
 
 import (
+	"bytes"
 	"context"
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
+	"net/url"
 )
 
-type TokenScope int
+type TokenScope string
 
 const (
-	TokenScopeAccounts TokenScope = iota
+	TokenScopeAccounts TokenScope = "accounts"
 )
 
-type TokenType int
+type TokenType string
 
 const (
-	TokenTypeBearer TokenType = iota
+	TokenTypeBearer TokenType = "Bearer"
 )
 
 type AccessToken struct {
-	Token     string
-	Type      TokenType
-	ExpiresIn int64
-	Scope     TokenScope
+	Token     string     `json:"access_token"`
+	Type      TokenType  `json:"token_type"`
+	ExpiresIn int64      `json:"expires_in"`
+	Scope     TokenScope `json:"scope"`
 }
 
 // GetAccessToken obtains an access token.
-func (c *client) GetAccessToken(ctx context.Context) (*AccessToken, error) {
-	_, body, err := c.get(ctx, "/oauth2/token", nil)
+func (c *client) GetAccessToken(ctx context.Context, scope TokenScope) (
+	*AccessToken, error) {
+
+	params := make(url.Values)
+	params.Set("grant_type", "client_credentials")
+	params.Set("scope", string(scope))
+
+	_, body, err := c.post(ctx, "/identity/v2/oauth2/token", nil,
+		bytes.NewBuffer([]byte(params.Encode())), WithBasicAuth(c.opts.clientID,
+			c.opts.clientSecret))
 	if err != nil {
 		return nil, fmt.Errorf("failed to get access token: %w", err)
 	}

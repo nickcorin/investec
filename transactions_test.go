@@ -2,7 +2,6 @@ package investec
 
 import (
 	"context"
-	"net/http"
 	"testing"
 	"time"
 
@@ -16,8 +15,8 @@ type TransactionsTestSuite struct {
 	server *mock.Server
 }
 
-func (suite *TransactionsTestSuite) SetupTest(h http.HandlerFunc) {
-	suite.server = mock.NewServer(h)
+func (suite *TransactionsTestSuite) SetupSuite() {
+	suite.server = mock.NewServer()
 	suite.client = NewClient(WithBaseURL(suite.server.URL))
 }
 
@@ -26,11 +25,8 @@ func (suite *TransactionsTestSuite) TearDownTest() {
 }
 
 func (suite *TransactionsTestSuite) TestClient_GetAccountTransactions() {
-	suite.SetupTest(suite.server.GetAccountTransactions)
-
 	res, err := suite.client.GetAccountTransactions(context.TODO(),
-		&TransactionsRequest{AccountID: "123ABC"})
-
+		&TransactionsRequest{AccountID: "123456789"})
 	suite.Require().NoError(err)
 	suite.Require().NotNil(res)
 
@@ -43,19 +39,21 @@ func (suite *TransactionsTestSuite) TestClient_GetAccountTransactions() {
 			CardNumber:      "",
 			PostingDate:     time.Date(2020, 6, 11, 0, 0, 0, 0, time.UTC),
 			ValueDate:       time.Date(2020, 6, 10, 0, 0, 0, 0, time.UTC),
+			ActionDate:      time.Date(2020, 6, 18, 0, 0, 0, 0, time.UTC),
 			TransactionDate: time.Date(2020, 6, 10, 0, 0, 0, 0, time.UTC),
 			Amount:          535,
 		},
 		{
-			AccountID:   "172878438321553632224",
-			Type:        TransactionTypeCredit,
-			Status:      TransactionStatusPosted,
-			Description: "CREDIT INTEREST",
-			CardNumber:  "",
-			PostingDate: time.Date(2020, 06, 11, 0, 0, 0, 0, time.UTC),
-			ValueDate:   time.Date(2020, 06, 10, 0, 0, 0, 0, time.UTC),
-			ActionDate:  time.Date(2020, 06, 18, 0, 0, 0, 0, time.UTC),
-			Amount:      31.09,
+			AccountID:       "172878438321553632224",
+			Type:            TransactionTypeCredit,
+			Status:          TransactionStatusPosted,
+			Description:     "CREDIT INTEREST",
+			CardNumber:      "",
+			PostingDate:     time.Date(2020, 6, 11, 0, 0, 0, 0, time.UTC),
+			ValueDate:       time.Date(2020, 6, 10, 0, 0, 0, 0, time.UTC),
+			ActionDate:      time.Date(2020, 6, 18, 0, 0, 0, 0, time.UTC),
+			TransactionDate: time.Date(2020, 6, 10, 0, 0, 0, 0, time.UTC),
+			Amount:          31.09,
 		},
 	}
 

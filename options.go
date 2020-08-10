@@ -7,8 +7,10 @@ var defaultOptions = clientOptions{
 }
 
 type clientOptions struct {
-	baseURL   string
-	transport *http.Client
+	baseURL      string
+	clientID     string
+	clientSecret string
+	transport    *http.Client
 }
 
 // ClientOption allows the configuration of the Client.
@@ -33,10 +35,49 @@ func WithBaseURL(baseURL string) ClientOptionFunc {
 	}
 }
 
+// WithClientID returns a ClientOptionFunc which configures the client's
+// clientID used for authentication.
+func WithClientID(clientID string) ClientOptionFunc {
+	return func(opts *clientOptions) {
+		opts.clientID = clientID
+	}
+}
+
+// WithClientSecret returns a ClientOptionFunc which configures the client's
+// clientSecret used for authentications.
+func WithClientSecret(secret string) ClientOptionFunc {
+	return func(opts *clientOptions) {
+		opts.clientSecret = secret
+	}
+}
+
 // WithTransport returns a ClientOptionFunc which configures the client
 // transport.
 func WithTransport(transport *http.Client) ClientOptionFunc {
 	return func(opts *clientOptions) {
 		opts.transport = transport
+	}
+}
+
+// RequestOption allows for configuration of requests made by the client. The
+// configuration is single request scoped.
+type RequestOption interface {
+	Apply(*http.Request)
+}
+
+// RequestOptionFunc is a function to RequestOption adapter.
+type RequestOptionFunc func(*http.Request)
+
+// Apply satisfies the RequestOption interface by applying the RequestOptionFunc
+// to r.
+func (o RequestOptionFunc) Apply(r *http.Request) {
+	o(r)
+}
+
+// WithBasicAuth returns a RequestOption which sets the request's basic
+// authentication.
+func WithBasicAuth(username, password string) RequestOptionFunc {
+	return func(r *http.Request) {
+		r.SetBasicAuth(username, password)
 	}
 }

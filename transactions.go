@@ -38,6 +38,50 @@ type Transaction struct {
 	Amount          float64           `json:"amount"`
 }
 
+// transactionWithoutDate is a type alias for Transaction allowing a custom
+// Unmarshaler implementation for only the date values.
+type transactionWithoutDate Transaction
+
+// UnmarshalJSON satisfies the json.Unmarshaler interface.
+func (t *Transaction) UnmarshalJSON(data []byte) error {
+	raw := struct {
+		transactionWithoutDate
+		PostingDate     string `json:"postingDate"`
+		ValueDate       string `json:"valueDate"`
+		ActionDate      string `json:"actionDate"`
+		TransactionDate string `json:"transactionDate"`
+	}{}
+
+	err := json.Unmarshal(data, &raw)
+	if err != nil {
+		return err
+	}
+
+	*t = Transaction(raw.transactionWithoutDate)
+
+	t.PostingDate, err = time.Parse("2006-01-02", raw.PostingDate)
+	if err != nil {
+		return err
+	}
+
+	t.ValueDate, err = time.Parse("2006-01-02", raw.ValueDate)
+	if err != nil {
+		return err
+	}
+
+	t.ActionDate, err = time.Parse("2006-01-02", raw.ActionDate)
+	if err != nil {
+		return err
+	}
+
+	t.TransactionDate, err = time.Parse("2006-01-02", raw.TransactionDate)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
 // TransactionRequest describes the request parameters available for retrieving
 // account transactions. All parameters are requires unless specified.
 type TransactionsRequest struct {
