@@ -1,8 +1,12 @@
 package investec
 
-import "net/http"
+import (
+	"fmt"
+	"net/http"
+)
 
 var defaultOptions = clientOptions{
+	baseURL:   "https://openapi.investec.com",
 	transport: http.DefaultClient,
 }
 
@@ -72,6 +76,14 @@ type RequestOptionFunc func(*http.Request)
 // to r.
 func (o RequestOptionFunc) Apply(r *http.Request) {
 	o(r)
+}
+
+// WithAccessToken returns a RequestOption which sets the request's
+// authorization header.
+func WithAccessToken(token string) RequestOptionFunc {
+	return func(r *http.Request) {
+		r.Header.Set("Authorization", fmt.Sprintf("Bearer %s", token))
+	}
 }
 
 // WithBasicAuth returns a RequestOption which sets the request's basic

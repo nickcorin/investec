@@ -11,7 +11,8 @@ import (
 )
 
 type client struct {
-	opts clientOptions
+	accessToken string
+	opts        clientOptions
 }
 
 // NewClient returns a Client configured with opts.
