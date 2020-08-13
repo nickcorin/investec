@@ -5,7 +5,6 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
-	"io/ioutil"
 	"time"
 )
 
@@ -119,21 +118,17 @@ func (c *client) GetAccountTransactions(ctx context.Context,
 		return nil, fmt.Errorf("failed to marshal request body: %w", err)
 	}
 
-	_, body, err := c.post(ctx, fmt.Sprintf(
+	res, err := c.transport.Post(ctx, fmt.Sprintf(
 		"/za/pb/v1/accounts/%s/transactions", req.AccountID), nil,
 		bytes.NewBuffer(payload))
 	if err != nil {
 		return nil, fmt.Errorf("failed to get account transactions: %w", err)
 	}
 
-	data, err := ioutil.ReadAll(body)
-	if err != nil {
-		return nil, fmt.Errorf("failed to read response body: %w", err)
-	}
-
 	var transactions TransactionsResponse
-	if err = json.Unmarshal(data, &transactions); err != nil {
-		return nil, fmt.Errorf("failed to unmarshal response body: %w", err)
+	if err = res.JSON(&transactions); err != nil {
+		return nil, fmt.Errorf("failed to unmarshal transactions response: %w",
+			err)
 	}
 
 	return &transactions, nil

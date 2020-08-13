@@ -3,10 +3,10 @@ package investec
 import (
 	"bytes"
 	"context"
-	"encoding/json"
 	"fmt"
-	"io/ioutil"
 	"net/url"
+
+	"github.com/nickcorin/snorlax"
 )
 
 type TokenScope string
@@ -36,21 +36,17 @@ func (c *client) GetAccessToken(ctx context.Context, scope TokenScope) (
 	params.Set("grant_type", "client_credentials")
 	params.Set("scope", string(scope))
 
-	_, body, err := c.post(ctx, "/identity/v2/oauth2/token", nil,
-		bytes.NewBuffer([]byte(params.Encode())), WithBasicAuth(c.opts.clientID,
-			c.opts.clientSecret))
+	payload := bytes.NewBuffer([]byte(params.Encode()))
+	res, err := c.transport.Post(
+		ctx, "/identity/v2/oauth2/token", nil, payload,
+		snorlax.WithBasicAuth(c.clientID, c.clientSecret))
 	if err != nil {
 		return nil, fmt.Errorf("failed to get access token: %w", err)
 	}
 
-	data, err := ioutil.ReadAll(body)
-	if err != nil {
-		return nil, fmt.Errorf("failed to read response body %w", err)
-	}
-
 	var accessToken AccessToken
-	if err = json.Unmarshal(data, &accessToken); err != nil {
-		return nil, fmt.Errorf("failed to unmarshal response body: %w", err)
+	if err = res.JSON(&accessToken); err != nil {
+		return nil, fmt.Errorf("failed to unmarshal access token: %w", err)
 	}
 
 	return &accessToken, nil

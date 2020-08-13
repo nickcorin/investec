@@ -1,48 +1,25 @@
 package investec
 
-import (
-	"fmt"
-	"net/http"
-)
-
-var defaultOptions = clientOptions{
-	baseURL:   "https://openapi.investec.com",
-	transport: http.DefaultClient,
-}
-
-type clientOptions struct {
-	baseURL      string
-	clientID     string
-	clientSecret string
-	transport    *http.Client
-}
+import "github.com/nickcorin/snorlax"
 
 // ClientOption allows the configuration of the Client.
 type ClientOption interface {
-	Apply(*clientOptions)
+	Apply(*client)
 }
 
 // ClientOptionFunc is a function to ClientOption adapter.
-type ClientOptionFunc func(*clientOptions)
+type ClientOptionFunc func(*client)
 
 // Apply satisfies the ClientOption interface by applying the ClientOptionFunc
 // onto opts.
-func (o ClientOptionFunc) Apply(opts *clientOptions) {
+func (o ClientOptionFunc) Apply(opts *client) {
 	o(opts)
-}
-
-// WithBaseURL returns a ClientOptionFunc which configures the client's baseURL
-// which prefixes all request paths.
-func WithBaseURL(baseURL string) ClientOptionFunc {
-	return func(opts *clientOptions) {
-		opts.baseURL = baseURL
-	}
 }
 
 // WithClientID returns a ClientOptionFunc which configures the client's
 // clientID used for authentication.
 func WithClientID(clientID string) ClientOptionFunc {
-	return func(opts *clientOptions) {
+	return func(opts *client) {
 		opts.clientID = clientID
 	}
 }
@@ -50,46 +27,15 @@ func WithClientID(clientID string) ClientOptionFunc {
 // WithClientSecret returns a ClientOptionFunc which configures the client's
 // clientSecret used for authentications.
 func WithClientSecret(secret string) ClientOptionFunc {
-	return func(opts *clientOptions) {
+	return func(opts *client) {
 		opts.clientSecret = secret
 	}
 }
 
 // WithTransport returns a ClientOptionFunc which configures the client
 // transport.
-func WithTransport(transport *http.Client) ClientOptionFunc {
-	return func(opts *clientOptions) {
+func WithTransport(transport *snorlax.Client) ClientOptionFunc {
+	return func(opts *client) {
 		opts.transport = transport
-	}
-}
-
-// RequestOption allows for configuration of requests made by the client. The
-// configuration is single request scoped.
-type RequestOption interface {
-	Apply(*http.Request)
-}
-
-// RequestOptionFunc is a function to RequestOption adapter.
-type RequestOptionFunc func(*http.Request)
-
-// Apply satisfies the RequestOption interface by applying the RequestOptionFunc
-// to r.
-func (o RequestOptionFunc) Apply(r *http.Request) {
-	o(r)
-}
-
-// WithAccessToken returns a RequestOption which sets the request's
-// authorization header.
-func WithAccessToken(token string) RequestOptionFunc {
-	return func(r *http.Request) {
-		r.Header.Set("Authorization", fmt.Sprintf("Bearer %s", token))
-	}
-}
-
-// WithBasicAuth returns a RequestOption which sets the request's basic
-// authentication.
-func WithBasicAuth(username, password string) RequestOptionFunc {
-	return func(r *http.Request) {
-		r.SetBasicAuth(username, password)
 	}
 }

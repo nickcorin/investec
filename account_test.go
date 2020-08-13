@@ -5,6 +5,7 @@ import (
 	"testing"
 
 	"github.com/nickcorin/investec/mock"
+	"github.com/nickcorin/snorlax"
 	"github.com/stretchr/testify/suite"
 )
 
@@ -16,7 +17,11 @@ type AccountTestSuite struct {
 
 func (suite *AccountTestSuite) SetupSuite() {
 	suite.server = mock.NewServer()
-	suite.client = NewClient(WithBaseURL(suite.server.URL))
+	suite.client = NewClient(
+		WithTransport(
+			snorlax.NewClient(snorlax.WithBaseURL(suite.server.URL)),
+		),
+	)
 }
 
 func (suite *AccountTestSuite) TearDownSuite() {

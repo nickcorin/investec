@@ -2,9 +2,7 @@ package investec
 
 import (
 	"context"
-	"encoding/json"
 	"fmt"
-	"io/ioutil"
 )
 
 type Account struct {
@@ -33,19 +31,14 @@ type AccountResponse struct {
 
 // GetAccounts obtains a list of accounts.
 func (c *client) GetAccounts(ctx context.Context) ([]Account, error) {
-	_, body, err := c.get(ctx, "/za/pb/v1/accounts", nil)
+	res, err := c.transport.Get(ctx, "/za/pb/v1/accounts", nil)
 	if err != nil {
 		return nil, fmt.Errorf("failed to get accounts: %w", err)
 	}
 
-	data, err := ioutil.ReadAll(body)
-	if err != nil {
-		return nil, fmt.Errorf("failed to read response body: %w", err)
-	}
-
 	var accountsResponse AccountResponse
-	if err = json.Unmarshal(data, &accountsResponse); err != nil {
-		return nil, fmt.Errorf("failed to parse response body: %w", err)
+	if err = res.JSON(&accountsResponse); err != nil {
+		return nil, fmt.Errorf("failed to unmarshal account response: %w", err)
 	}
 
 	return accountsResponse.Data.Accounts, nil
@@ -77,21 +70,16 @@ type BalanceResponse struct {
 // GetAccountBalance obtains a specified account's balance.
 func (c *client) GetAccountBalance(ctx context.Context, accountID string) (
 	*Balance, error) {
-	_, body, err := c.post(ctx, fmt.Sprintf("/za/pb/v1/accounts/%s/balance",
-		accountID), nil, nil)
+	res, err := c.transport.Post(ctx, fmt.Sprintf(
+		"/za/pb/v1/accounts/%s/balance", accountID), nil, nil)
 	if err != nil {
 		return nil, fmt.Errorf("failed to get account balance %s: %w",
 			accountID, err)
 	}
 
-	data, err := ioutil.ReadAll(body)
-	if err != nil {
-		return nil, fmt.Errorf("failed to read response body: %w", err)
-	}
-
 	var balanceResponse BalanceResponse
-	if err = json.Unmarshal(data, &balanceResponse); err != nil {
-		return nil, fmt.Errorf("failed to parse response body: %w", err)
+	if err = res.JSON(&balanceResponse); err != nil {
+		return nil, fmt.Errorf("failed to unmarshal balance response: %w", err)
 	}
 
 	return &balanceResponse.Data.Balance, nil
