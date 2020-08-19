@@ -5,7 +5,6 @@ import (
 	"testing"
 
 	"github.com/nickcorin/investec/mock"
-	"github.com/nickcorin/snorlax"
 	"github.com/stretchr/testify/suite"
 )
 
@@ -17,11 +16,7 @@ type AccessTokenTestSuite struct {
 
 func (suite *AccessTokenTestSuite) SetupSuite() {
 	suite.server = mock.NewServer()
-	suite.client = NewClient(
-		WithTransport(
-			snorlax.NewClient(snorlax.WithBaseURL(suite.server.URL)),
-		),
-	)
+	suite.client = NewForTesting(suite.T(), suite.server.URL, nil)
 }
 
 func (suite *AccessTokenTestSuite) TestClient_GetAccessToken() {

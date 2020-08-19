@@ -37,9 +37,9 @@ func (c *client) GetAccessToken(ctx context.Context, scope TokenScope) (
 	params.Set("scope", string(scope))
 
 	payload := bytes.NewBuffer([]byte(params.Encode()))
-	res, err := c.transport.Post(
+	res, err := c.opts.Transport.Post(
 		ctx, "/identity/v2/oauth2/token", nil, payload,
-		snorlax.WithBasicAuth(c.clientID, c.clientSecret))
+		snorlax.WithBasicAuth(c.opts.ClientID, c.opts.ClientSecret))
 	if err != nil {
 		return nil, fmt.Errorf("failed to get access token: %w", err)
 	}

@@ -118,7 +118,7 @@ func (c *client) GetAccountTransactions(ctx context.Context,
 		return nil, fmt.Errorf("failed to marshal request body: %w", err)
 	}
 
-	res, err := c.transport.Post(ctx, fmt.Sprintf(
+	res, err := c.opts.Transport.Post(ctx, fmt.Sprintf(
 		"/za/pb/v1/accounts/%s/transactions", req.AccountID), nil,
 		bytes.NewBuffer(payload))
 	if err != nil {

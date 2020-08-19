@@ -31,7 +31,7 @@ type AccountResponse struct {
 
 // GetAccounts obtains a list of accounts.
 func (c *client) GetAccounts(ctx context.Context) ([]Account, error) {
-	res, err := c.transport.Get(ctx, "/za/pb/v1/accounts", nil)
+	res, err := c.opts.Transport.Get(ctx, "/za/pb/v1/accounts", nil)
 	if err != nil {
 		return nil, fmt.Errorf("failed to get accounts: %w", err)
 	}
@@ -70,7 +70,7 @@ type BalanceResponse struct {
 // GetAccountBalance obtains a specified account's balance.
 func (c *client) GetAccountBalance(ctx context.Context, accountID string) (
 	*Balance, error) {
-	res, err := c.transport.Post(ctx, fmt.Sprintf(
+	res, err := c.opts.Transport.Post(ctx, fmt.Sprintf(
 		"/za/pb/v1/accounts/%s/balance", accountID), nil, nil)
 	if err != nil {
 		return nil, fmt.Errorf("failed to get account balance %s: %w",

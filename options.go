@@ -1,41 +1,23 @@
 package investec
 
-import "github.com/nickcorin/snorlax"
+import (
+	"github.com/nickcorin/snorlax"
+)
 
-// ClientOption allows the configuration of the Client.
-type ClientOption interface {
-	Apply(*client)
+var defaultOptions = ClientOptions{
+	Transport: snorlax.New(&snorlax.ClientOptions{
+		BaseURL: "https://openapi.investec.com",
+		CallOptions: []snorlax.CallOption{
+			snorlax.WithHeader("Accept", "application/json"),
+			snorlax.WithHeader("Content-Type", "x-www-form-urlencoded"),
+		},
+	}),
 }
 
-// ClientOptionFunc is a function to ClientOption adapter.
-type ClientOptionFunc func(*client)
-
-// Apply satisfies the ClientOption interface by applying the ClientOptionFunc
-// onto opts.
-func (o ClientOptionFunc) Apply(opts *client) {
-	o(opts)
-}
-
-// WithClientID returns a ClientOptionFunc which configures the client's
-// clientID used for authentication.
-func WithClientID(clientID string) ClientOptionFunc {
-	return func(opts *client) {
-		opts.clientID = clientID
-	}
-}
-
-// WithClientSecret returns a ClientOptionFunc which configures the client's
-// clientSecret used for authentications.
-func WithClientSecret(secret string) ClientOptionFunc {
-	return func(opts *client) {
-		opts.clientSecret = secret
-	}
-}
-
-// WithTransport returns a ClientOptionFunc which configures the client
-// transport.
-func WithTransport(transport *snorlax.Client) ClientOptionFunc {
-	return func(opts *client) {
-		opts.transport = transport
-	}
+// ClientOptions defines the configurable attributes of the client.
+type ClientOptions struct {
+	AuthToken    string
+	ClientID     string
+	ClientSecret string
+	Transport    *snorlax.Client
 }
