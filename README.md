@@ -37,8 +37,8 @@ client := ziggy.New(nil)
 #### Configuring the client using `ClientOptions`.
 ```golang
 client := ziggy.New(&ziggy.ClientOptions{
-		ClientID: "MyClientID",
-		ClientSecret: "z1ggYS3creT",
+		ClientID: 		"MyClientID",
+		ClientSecret: 	"z1ggYS3creT",
 	}
 )
 ```
