@@ -4,6 +4,8 @@ github.com/davecgh/go-spew v1.1.1 h1:vj9j/u1bqnvCEfJOwUhtlOARqs3+rkHYY13jYWTU97c
 github.com/davecgh/go-spew v1.1.1/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
 github.com/gorilla/mux v1.7.4 h1:VuZ8uybHlWmqV03+zRzdwKL4tUnIp1MAQtp1mIFE1bc=
 github.com/gorilla/mux v1.7.4/go.mod h1:DVbg23sWSpFRCP0SfiEN6jmj59UnW/n46BH5rLB71So=
+github.com/nickcorin/investec v0.0.0-20200819202606-a5928abda6b0 h1:96F7KH6DhfC9MH63sZBg9QUwJ+uyCTFbQJjH28tLJIk=
+github.com/nickcorin/investec v0.0.0-20200819202606-a5928abda6b0/go.mod h1:hcnGynCyuvOZuinqCZ6I+oM0RE7qcxFuAhOqV0Uthvg=
 github.com/nickcorin/snorlax v0.0.0-20200813113252-530af73d882e h1:SCoEvasO9Z1Z8JlsmpaYXf1yRspjlAxQTvSrSR1J0sk=
 github.com/nickcorin/snorlax v0.0.0-20200813113252-530af73d882e/go.mod h1:Hn12OpJXZuX1m7rllkbiyOw6NkGcbUyMtuxLzOqWXmM=
 github.com/nickcorin/snorlax v0.0.0-20200819194847-5887b51adbcc h1:7hNezCfWWtoL3r/ALK7KzHC6zKfLDc+HAxABZh4f+gY=

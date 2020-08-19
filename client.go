@@ -1,4 +1,4 @@
-package investec
+package ziggy
 
 import (
 	"testing"
