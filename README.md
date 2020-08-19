@@ -61,11 +61,6 @@ if err != nil {
 
 #### ...and then fetching an account's balance.
 ```golang
-accounts, err := z.GetAccounts(context.Background())
-if err != nil {
-	log.Fatal(err)
-}
-
 balance, err := z.GetBalance(context.Background(), accounts[0].ID)
 if err != nil {
 	log.Fatal(err)
