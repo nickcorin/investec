@@ -1,44 +1,79 @@
 package ziggy
 
 import (
+	"log"
+	"net/url"
 	"testing"
 
 	"github.com/nickcorin/snorlax"
 )
 
-const defaultURL = "https://openapi.investec.com"
+const defaultBaseURL = "https://openapi.investec.com"
 
-type client struct {
-	opts *ClientOptions
+// Client defines a stateful REST client wrapper for the Investec Open API.
+type Client struct {
+	ClientID     string
+	ClientSecret string
+
+	baseURL   string
+	proxyURL  *url.URL
+	token     *AccessToken
+	transport *snorlax.Client
 }
 
 // New returns a Client configured with opts.
-func New(opts *ClientOptions) Client {
-	if opts == nil {
-		opts = &defaultOptions
-	}
+func NewClient(clientID, clientSecret string) *Client {
+	return &Client{
+		ClientID:     clientID,
+		ClientSecret: clientSecret,
 
-	if opts.Transport == nil {
-		opts.Transport = defaultOptions.Transport
+		baseURL:  defaultBaseURL,
+		proxyURL: nil,
+		token:    nil,
+		transport: snorlax.DefaultClient.
+			AddRequestHook(snorlax.WithBasicAuth(clientID, clientSecret)).
+			AddRequestHook(snorlax.WithHeader("Accept", "application/json")).
+			AddRequestHook(snorlax.WithHeader("Content-Type",
+				"x-www-form-urlencoded")).
+			SetBaseURL(defaultBaseURL),
 	}
-
-	return &client{opts}
 }
 
-// NewForTesting returns a Client to be used for unit testing.
-func NewForTesting(_ *testing.T, baseURL string, opts *ClientOptions) Client {
-	if opts == nil {
-		opts = &defaultOptions
+// NewClientForTesting returns a Ziggy client with a custom baseURL.
+func NewClientForTesting(_ *testing.T, baseURL string) *Client {
+	client := NewClient("", "")
+	return client.setBaseURL(baseURL)
+}
+
+func (c *Client) setBaseURL(u string) *Client {
+	baseURL, err := url.Parse(u)
+	if err != nil {
+		// TODO: Add logs to indicate that this failed.
+		return c
 	}
 
-	opts.Transport = snorlax.New(&snorlax.ClientOptions{
-		BaseURL: baseURL,
-		CallOptions: []snorlax.CallOption{
-			snorlax.WithHeader("Accept", "application/json"),
-			snorlax.WithHeader("Content-Type",
-				"application/x-www-form-urlencoded"),
-		},
-	})
+	c.transport.SetBaseURL(baseURL.String())
+	c.baseURL = baseURL.String()
+	return c
+}
 
-	return &client{opts}
+// SetToken sets a temporary authorization token on the Ziggy client.
+func (c *Client) SetToken(token *AccessToken) *Client {
+	c.token = token
+	return c
+}
+
+// SetProxy sets the proxy URL for the Ziggy client.
+func (c *Client) SetProxy(u string) *Client {
+	proxyURL, err := url.Parse(u)
+	if err != nil {
+		log.Println("I DIDN'T SET THE PROXY!")
+		// TODO: Add logs to indicate that this failed.
+		return c
+	}
+	log.Println("I DID SET THE PROXY!")
+	c.proxyURL = proxyURL
+	c.transport.SetProxy(u)
+
+	return c
 }

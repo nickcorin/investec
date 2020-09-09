@@ -10,6 +10,10 @@ github.com/nickcorin/snorlax v0.0.0-20200813113252-530af73d882e h1:SCoEvasO9Z1Z8
 github.com/nickcorin/snorlax v0.0.0-20200813113252-530af73d882e/go.mod h1:Hn12OpJXZuX1m7rllkbiyOw6NkGcbUyMtuxLzOqWXmM=
 github.com/nickcorin/snorlax v0.0.0-20200819194847-5887b51adbcc h1:7hNezCfWWtoL3r/ALK7KzHC6zKfLDc+HAxABZh4f+gY=
 github.com/nickcorin/snorlax v0.0.0-20200819194847-5887b51adbcc/go.mod h1:Hn12OpJXZuX1m7rllkbiyOw6NkGcbUyMtuxLzOqWXmM=
+github.com/nickcorin/snorlax v0.0.0-20200908152740-e3e5bb3e4ec9 h1:mpCUjXpRfcQJlgR45GMP7yPmSw64tP8nQ4fkruEnJM4=
+github.com/nickcorin/snorlax v0.0.0-20200908152740-e3e5bb3e4ec9/go.mod h1:Hn12OpJXZuX1m7rllkbiyOw6NkGcbUyMtuxLzOqWXmM=
+github.com/nickcorin/snorlax v0.0.0-20200909161311-9bb52c3fe69f h1:rEZjyIL+/p8qknZ/uNVifUsq6+LDQixZ/G+vDkC8XtE=
+github.com/nickcorin/snorlax v0.0.0-20200909161311-9bb52c3fe69f/go.mod h1:Hn12OpJXZuX1m7rllkbiyOw6NkGcbUyMtuxLzOqWXmM=
 github.com/pmezard/go-difflib v1.0.0 h1:4DBwDE0NGyQoBHbLQYPwSUPoCMWR5BEzIk/f1lZbAQM=
 github.com/pmezard/go-difflib v1.0.0/go.mod h1:iKH77koFhYxTK1pcRnkKkqfTogsbg7gZNVY4sRDYZ/4=
 github.com/stretchr/objx v0.1.0 h1:4G4v2dO3VZwixGIRoQ5Lfboy6nUhCyYzaqnIAPPhYs4=

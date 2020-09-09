@@ -1,4 +1,4 @@
-package ziggy
+package ziggy_test
 
 import (
 	"context"
@@ -6,18 +6,19 @@ import (
 	"time"
 
 	"github.com/nickcorin/investec/mock"
+	"github.com/nickcorin/ziggy"
 	"github.com/stretchr/testify/suite"
 )
 
 type TransactionsTestSuite struct {
 	suite.Suite
-	client Client
+	client *ziggy.Client
 	server *mock.Server
 }
 
 func (suite *TransactionsTestSuite) SetupSuite() {
 	suite.server = mock.NewServer()
-	suite.client = NewForTesting(suite.T(), suite.server.URL, nil)
+	suite.client = ziggy.NewClientForTesting(suite.T(), suite.server.URL)
 }
 
 func (suite *TransactionsTestSuite) TearDownTest() {
@@ -26,15 +27,15 @@ func (suite *TransactionsTestSuite) TearDownTest() {
 
 func (suite *TransactionsTestSuite) TestClient_GetAccountTransactions() {
 	res, err := suite.client.GetAccountTransactions(context.TODO(),
-		&TransactionsRequest{AccountID: "123456789"})
+		&ziggy.TransactionsRequest{AccountID: "123456789"})
 	suite.Require().NoError(err)
 	suite.Require().NotNil(res)
 
-	transactions := []Transaction{
+	transactions := []ziggy.Transaction{
 		{
 			AccountID:       "172878438321553632224",
-			Type:            TransactionTypeDebit,
-			Status:          TransactionStatusPosted,
+			Type:            ziggy.TransactionTypeDebit,
+			Status:          ziggy.TransactionStatusPosted,
 			Description:     "MONTHLY SERVICE CHARGE",
 			CardNumber:      "",
 			PostingDate:     time.Date(2020, 6, 11, 0, 0, 0, 0, time.UTC),
@@ -45,8 +46,8 @@ func (suite *TransactionsTestSuite) TestClient_GetAccountTransactions() {
 		},
 		{
 			AccountID:       "172878438321553632224",
-			Type:            TransactionTypeCredit,
-			Status:          TransactionStatusPosted,
+			Type:            ziggy.TransactionTypeCredit,
+			Status:          ziggy.TransactionStatusPosted,
 			Description:     "CREDIT INTEREST",
 			CardNumber:      "",
 			PostingDate:     time.Date(2020, 6, 11, 0, 0, 0, 0, time.UTC),

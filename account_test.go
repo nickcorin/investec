@@ -1,22 +1,23 @@
-package ziggy
+package ziggy_test
 
 import (
 	"context"
 	"testing"
 
 	"github.com/nickcorin/investec/mock"
+	"github.com/nickcorin/ziggy"
 	"github.com/stretchr/testify/suite"
 )
 
 type AccountTestSuite struct {
 	suite.Suite
-	client Client
+	client *ziggy.Client
 	server *mock.Server
 }
 
 func (suite *AccountTestSuite) SetupSuite() {
 	suite.server = mock.NewServer()
-	suite.client = NewForTesting(suite.T(), suite.server.URL, nil)
+	suite.client = ziggy.NewClientForTesting(suite.T(), suite.server.URL)
 }
 
 func (suite *AccountTestSuite) TearDownSuite() {
@@ -28,7 +29,7 @@ func (suite *AccountTestSuite) TestClient_GetAccounts() {
 	suite.Require().NoError(err)
 	suite.Require().NotNil(accounts)
 
-	testAccounts := []Account{
+	testAccounts := []ziggy.Account{
 		{
 			ID:        "172878438321553632224",
 			Number:    "10010206147",
@@ -48,7 +49,7 @@ func (suite *AccountTestSuite) TestClient_GetAccountBalance() {
 	suite.Require().NoError(err)
 	suite.Require().NotNil(balance)
 
-	testBalance := Balance{
+	testBalance := ziggy.Balance{
 		AccountID: "172878438321553632224",
 		Current:   28857.76,
 		Available: 98857.76,

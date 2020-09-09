@@ -1,37 +1,43 @@
-package ziggy
+package ziggy_test
 
 import (
 	"context"
 	"testing"
 
 	"github.com/nickcorin/investec/mock"
+	"github.com/nickcorin/ziggy"
 	"github.com/stretchr/testify/suite"
 )
 
 type AccessTokenTestSuite struct {
 	suite.Suite
-	client Client
+	client *ziggy.Client
 	server *mock.Server
 }
 
 func (suite *AccessTokenTestSuite) SetupSuite() {
 	suite.server = mock.NewServer()
-	suite.client = NewForTesting(suite.T(), suite.server.URL, nil)
+	suite.client = ziggy.NewClientForTesting(suite.T(), suite.server.URL)
 }
 
 func (suite *AccessTokenTestSuite) TestClient_GetAccessToken() {
-	token, err := suite.client.GetAccessToken(context.TODO(), TokenScopeAccounts)
+	token, err := suite.client.GetAccessToken(context.TODO(),
+		ziggy.TokenScopeAccounts)
 	suite.Require().NoError(err)
 	suite.Require().NotNil(token)
 
-	testToken := AccessToken{
+	testToken := ziggy.AccessToken{
 		Token:     "Ms9OsZkyrhBZd5yQJgfEtiDy4t2c",
-		Type:      TokenTypeBearer,
+		Type:      ziggy.TokenTypeBearer,
 		ExpiresIn: 1799,
-		Scope:     TokenScopeAccounts,
+		Scope:     ziggy.TokenScopeAccounts,
 	}
 
-	suite.Require().Equal(&testToken, token)
+	suite.Require().Equal(testToken.Token, token.Token)
+	suite.Require().Equal(testToken.Type, token.Type)
+	suite.Require().Equal(testToken.ExpiresIn, token.ExpiresIn)
+	suite.Require().Equal(testToken.Scope, token.Scope)
+
 }
 
 func TestAccessTokenTestSuite(t *testing.T) {
