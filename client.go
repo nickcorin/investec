@@ -8,7 +8,7 @@ import (
 	"github.com/nickcorin/snorlax"
 )
 
-const defaultBaseURL = "https://openapi.investec.com"
+const DefaultURL = "https://openapi.investec.com"
 
 // Client defines a stateful REST client wrapper for the Investec Open API.
 type Client struct {
@@ -27,7 +27,7 @@ func NewClient(clientID, clientSecret string) *Client {
 		ClientID:     clientID,
 		ClientSecret: clientSecret,
 
-		baseURL:  defaultBaseURL,
+		baseURL:  DefaultURL,
 		proxyURL: nil,
 		token:    nil,
 		transport: snorlax.DefaultClient.
@@ -35,7 +35,7 @@ func NewClient(clientID, clientSecret string) *Client {
 			AddRequestHook(snorlax.WithHeader("Accept", "application/json")).
 			AddRequestHook(snorlax.WithHeader("Content-Type",
 				"x-www-form-urlencoded")).
-			SetBaseURL(defaultBaseURL),
+			SetBaseURL(DefaultURL),
 	}
 }
 

@@ -4,8 +4,8 @@ import (
 	"context"
 	"testing"
 
-	"github.com/nickcorin/investec/mock"
 	"github.com/nickcorin/ziggy"
+	"github.com/nickcorin/ziggy/mock"
 	"github.com/stretchr/testify/suite"
 )
 
