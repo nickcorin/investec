@@ -35,7 +35,6 @@ func (router *CommandRouter) Register(command string, fn CommandFn,
 		cmd:       command,
 		fn:        fn,
 		help:      help,
-		subrouter: NewRouter(),
 	}
 
 	return nil
@@ -43,7 +42,8 @@ func (router *CommandRouter) Register(command string, fn CommandFn,
 
 // Run traverses the router tree and executes the deepest command, passing in
 // the remainder of the command string as arguments.
-func (router *CommandRouter) Search(commands ...string) (*Command, error) {
+func (router *CommandRouter) Search(commands ...string) (*Command, []string,
+	error) {
 	r := router
 	for {
 		// There are no more commands to search.
@@ -57,12 +57,12 @@ func (router *CommandRouter) Search(commands ...string) (*Command, error) {
 		}
 
 		if c.subrouter == nil {
-			return &c, nil
+			return &c, commands[1:], nil
 		}
 
 		r = c.subrouter
 		commands = commands[1:]
 	}
 
-	return nil, fmt.Errorf("command not found")
+	return nil, nil, fmt.Errorf("command not found")
 }

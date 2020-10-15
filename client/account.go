@@ -3,13 +3,21 @@ package client
 import (
 	"context"
 	"fmt"
+	"net/http"
 
 	"github.com/nickcorin/ziggy"
+
+	"github.com/nickcorin/snorlax"
 )
 
 // GetAccounts satisfies the ziggy.Client interface.
 func (c *httpClient) GetAccounts(ctx context.Context) ([]ziggy.Account, error) {
-	res, err := c.transport.Get(ctx, "/za/pb/v1/accounts", nil)
+	fmt.Println(c.ClientID)
+	fmt.Println(c.ClientSecret)
+
+	res, err := c.transport.Get(ctx, "/za/pb/v1/accounts", nil,
+		snorlax.WithHeader(http.CanonicalHeaderKey("Authorization"),
+			fmt.Sprintf("%s %s", c.token.Type, c.token.Token)))
 	if err != nil {
 		return nil, fmt.Errorf("failed to get accounts: %w", err)
 	}

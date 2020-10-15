@@ -1,12 +1,12 @@
 package client
 
 import (
-	"log"
 	"net/url"
 	"testing"
 
 	"github.com/nickcorin/ziggy"
 
+	"github.com/sirupsen/logrus"
 	"github.com/nickcorin/snorlax"
 )
 
@@ -31,10 +31,10 @@ func NewHTTP(clientID, clientSecret string) ziggy.Client {
 		proxyURL: nil,
 		token:    nil,
 		transport: snorlax.DefaultClient.
-			AddRequestHook(snorlax.WithBasicAuth(clientID, clientSecret)).
 			AddRequestHook(snorlax.WithHeader("Accept", "application/json")).
 			AddRequestHook(snorlax.WithHeader("Content-Type",
-				"x-www-form-urlencoded")).
+				"application/x-www-form-urlencoded")).
+			SetLogLevel(logrus.TraceLevel).
 			SetBaseURL(ziggy.DefaultURL),
 	}
 }
@@ -67,11 +67,9 @@ func (c *httpClient) SetToken(token *ziggy.AccessToken) *httpClient {
 func (c *httpClient) SetProxy(u string) *httpClient {
 	proxyURL, err := url.Parse(u)
 	if err != nil {
-		log.Println("I DIDN'T SET THE PROXY!")
 		// TODO: Add logs to indicate that this failed.
 		return c
 	}
-	log.Println("I DID SET THE PROXY!")
 	c.proxyURL = proxyURL
 	c.transport.SetProxy(u)
 

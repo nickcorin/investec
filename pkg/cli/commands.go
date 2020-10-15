@@ -1,6 +1,7 @@
 package cli
 
 import (
+	"context"
 	"io"
 	"strings"
 
@@ -10,7 +11,8 @@ import (
 // CommandFn describes the signature for an executable ziggyd command. It takes
 // in a client, a Writer to which all output will be streamed, and the arguments
 // for the command.
-type CommandFn func(c *ziggy.Client, w io.Writer, args ...string) error
+type CommandFn func(ctx context.Context, c ziggy.Client, w io.Writer,
+	args ...string) error
 
 // Command describes a node in the command tree.
 type Command struct {
@@ -21,7 +23,8 @@ type Command struct {
 }
 
 // Run executes the command with the provided arguments.
-func (c *Command) Run(client *ziggy.Client, w io.Writer, args ...string) error {
+func (c *Command) Run(ctx context.Context, client ziggy.Client, w io.Writer,
+args ...string) error {
 	newArgs := make([]string, 0)
 	for i, arg := range args {
 		if !strings.EqualFold(c.cmd, arg) {
@@ -31,7 +34,7 @@ func (c *Command) Run(client *ziggy.Client, w io.Writer, args ...string) error {
 		break
 	}
 
-	return c.fn(client, w, newArgs...)
+	return c.fn(ctx, client, w, newArgs...)
 }
 
 // RegisterSubcommand adds a command to the Command's subrouter.

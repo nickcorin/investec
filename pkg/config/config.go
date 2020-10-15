@@ -8,6 +8,9 @@ import (
 	"path/filepath"
 )
 
+// DefaultConfigFile is the default name for Ziggy's config file.
+const DefaultConfigFile = ".ziggy.conf"
+
 var defaultConfig = Config{
 	PrivacyMask: true,
 }

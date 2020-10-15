@@ -202,6 +202,12 @@ github.com/nickcorin/snorlax v0.0.0-20200909161311-9bb52c3fe69f h1:rEZjyIL+/p8qk
 github.com/nickcorin/snorlax v0.0.0-20200909161311-9bb52c3fe69f/go.mod h1:Hn12OpJXZuX1m7rllkbiyOw6NkGcbUyMtuxLzOqWXmM=
 github.com/nickcorin/snorlax v0.0.0-20200925132734-aa731d75a297 h1:rPtHEqVPehf5ux3vJ4gU4CIiNe2B6V9PkKFoBzSekjE=
 github.com/nickcorin/snorlax v0.0.0-20200925132734-aa731d75a297/go.mod h1:yaUWwBUby2TgHTZEo9PGE3u7mDkDGFv/TRS/VCU6LN4=
+github.com/nickcorin/snorlax v0.0.0-20201015133126-bdbee1f7c4de h1:OQe+Kb4SmRfOpf9dKEroqIMwuZdKl4NiF6D7UmpMJX4=
+github.com/nickcorin/snorlax v0.0.0-20201015133126-bdbee1f7c4de/go.mod h1:yaUWwBUby2TgHTZEo9PGE3u7mDkDGFv/TRS/VCU6LN4=
+github.com/nickcorin/snorlax v0.0.0-20201015134147-925b2e48bdc2 h1:E1D7I90PYMCLw9xskfI+LEV2LmsgavL35mmctdhqWG0=
+github.com/nickcorin/snorlax v0.0.0-20201015134147-925b2e48bdc2/go.mod h1:yaUWwBUby2TgHTZEo9PGE3u7mDkDGFv/TRS/VCU6LN4=
+github.com/nickcorin/snorlax v0.0.0-20201015153034-516ef262f371 h1:1l1aWw6uSy3Fl1lMukSf/rhRn6iyL5yIvsjspl1wKgg=
+github.com/nickcorin/snorlax v0.0.0-20201015153034-516ef262f371/go.mod h1:yaUWwBUby2TgHTZEo9PGE3u7mDkDGFv/TRS/VCU6LN4=
 github.com/oklog/oklog v0.3.2/go.mod h1:FCV+B7mhrz4o+ueLpx+KqkyXRGMWOYEvfiXtdGtbWGs=
 github.com/oklog/run v1.0.0/go.mod h1:dlhp/R75TPv97u0XWUtDeV/lRKWPKSdTuV0TZvrmrQA=
 github.com/olekukonko/tablewriter v0.0.0-20170122224234-a0225b3f23b5/go.mod h1:vsDQFd/mU46D+Z4whnwzcISnGGzXWMclvtLoiIKAKIo=

@@ -28,6 +28,11 @@ func (c *httpClient) GetAccessToken(ctx context.Context,
 		return nil, fmt.Errorf("failed to get access token: %w", err)
 	}
 
+	if !res.IsSuccess() {
+		return nil, fmt.Errorf("failed to fetch access token: %d status " +
+		"code received", res.StatusCode)
+	}
+
 	var accessToken ziggy.AccessToken
 	if err = res.JSON(&accessToken); err != nil {
 		return nil, fmt.Errorf("failed to unmarshal access token: %w", err)
@@ -36,6 +41,8 @@ func (c *httpClient) GetAccessToken(ctx context.Context,
 	// We set this to be able to calculate whether the token is expired at a
 	// later stage.
 	accessToken.CreatedAt = time.Now()
+
+	c.SetToken(&accessToken)
 
 	return &accessToken, nil
 }
