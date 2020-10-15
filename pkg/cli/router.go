@@ -1,4 +1,4 @@
-package ziggyd
+package cli
 
 import (
 	"fmt"
