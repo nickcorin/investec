@@ -1,4 +1,4 @@
-package ziggy_test
+package client_test
 
 import (
 	"context"
@@ -6,27 +6,29 @@ import (
 	"time"
 
 	"github.com/nickcorin/ziggy"
-	"github.com/nickcorin/ziggy/mock"
+	"github.com/nickcorin/ziggy/client"
+	"github.com/nickcorin/ziggy/server"
+
 	"github.com/stretchr/testify/suite"
 )
 
 type TransactionsTestSuite struct {
 	suite.Suite
-	client *ziggy.Client
-	server *mock.Server
+	client ziggy.Client
+	server *server.Mock
 }
 
 func (suite *TransactionsTestSuite) SetupSuite() {
-	suite.server = mock.NewServer()
-	suite.client = ziggy.NewClientForTesting(suite.T(), suite.server.URL)
+	suite.server = server.NewMock()
+	suite.client = client.NewHTTPForTesting(suite.T(), suite.server.URL)
 }
 
 func (suite *TransactionsTestSuite) TearDownTest() {
 	suite.server.Close()
 }
 
-func (suite *TransactionsTestSuite) TestClient_GetAccountTransactions() {
-	res, err := suite.client.GetAccountTransactions(context.TODO(),
+func (suite *TransactionsTestSuite) TestClient_GetTransactions() {
+	res, err := suite.client.GetTransactions(context.TODO(),
 		&ziggy.TransactionsRequest{AccountID: "123456789"})
 	suite.Require().NoError(err)
 	suite.Require().NotNil(res)
@@ -59,7 +61,7 @@ func (suite *TransactionsTestSuite) TestClient_GetAccountTransactions() {
 	}
 
 	for _, t := range transactions {
-		suite.Require().Contains(res.Data.Transactions, t)
+		suite.Require().Contains(res, t)
 	}
 }
 

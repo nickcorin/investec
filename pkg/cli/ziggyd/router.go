@@ -11,7 +11,7 @@ func NewRouter() *CommandRouter {
 	}
 }
 
-// CommandRouter stores the command tree
+// CommandRouter stores the command tree.
 type CommandRouter struct {
 	commands map[string]Command
 }

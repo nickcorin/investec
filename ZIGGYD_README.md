@@ -11,7 +11,7 @@
 
 ## Installation
 
-To install `ziggy`, use `go get`:
+To install `ziggyd`, use `go get`:
 ```
 go install github.com/nickcorin/ziggy/cmd/ziggyd
 ```

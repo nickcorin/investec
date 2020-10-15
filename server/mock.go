@@ -1,24 +1,26 @@
-package mock
+package server
 
 import (
+	"fmt"
 	"io/ioutil"
 	"log"
 	"net/http"
 	"net/http/httptest"
+	"path/filepath"
 
 	"github.com/gorilla/mux"
 )
 
-type Server struct {
+type Mock struct {
 	*httptest.Server
 }
 
-func NewServer() *Server {
+func NewMock() *Mock {
 	r := mux.NewRouter()
 	registerRoutes(r)
 
 	s := httptest.NewServer(r)
-	return &Server{s}
+	return &Mock{s}
 }
 
 func registerRoutes(r *mux.Router) {
@@ -33,12 +35,18 @@ func registerRoutes(r *mux.Router) {
 		accountTransactionsHandler)
 }
 
-func readResponseFile(filepath string) ([]byte, error) {
-	return ioutil.ReadFile(filepath)
+func readResponseFile(path string) ([]byte, error) {
+	abs, err := filepath.Abs(path)
+	if err != nil {
+		return nil, err
+	}
+
+	fmt.Printf("%s\n", abs)
+	return ioutil.ReadFile(path)
 }
 
 func accessTokenHandler(w http.ResponseWriter, r *http.Request) {
-	res, err := readResponseFile("mock/testdata/access_token.json")
+	res, err := readResponseFile("testdata/access_token.json")
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
 		w.Write([]byte(err.Error()))
@@ -50,7 +58,7 @@ func accessTokenHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func accountBalanceHandler(w http.ResponseWriter, r *http.Request) {
-	res, err := readResponseFile("mock/testdata/account_balance.json")
+	res, err := readResponseFile("testdata/account_balance.json")
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
 		w.Write([]byte(err.Error()))
@@ -62,7 +70,7 @@ func accountBalanceHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func accountListHandler(w http.ResponseWriter, r *http.Request) {
-	res, err := readResponseFile("mock/testdata/account_list.json")
+	res, err := readResponseFile("testdata/account_list.json")
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
 		w.Write([]byte(err.Error()))
@@ -74,7 +82,7 @@ func accountListHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func accountTransactionsHandler(w http.ResponseWriter, r *http.Request) {
-	res, err := readResponseFile("mock/testdata/account_transactions.json")
+	res, err := readResponseFile("testdata/account_transactions.json")
 	if err != nil {
 		log.Println(err.Error())
 		w.WriteHeader(http.StatusInternalServerError)

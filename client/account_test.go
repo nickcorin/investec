@@ -1,23 +1,25 @@
-package ziggy_test
+package client_test
 
 import (
 	"context"
 	"testing"
 
 	"github.com/nickcorin/ziggy"
-	"github.com/nickcorin/ziggy/mock"
+	"github.com/nickcorin/ziggy/client"
+	"github.com/nickcorin/ziggy/server"
+
 	"github.com/stretchr/testify/suite"
 )
 
 type AccountTestSuite struct {
 	suite.Suite
-	client *ziggy.Client
-	server *mock.Server
+	client ziggy.Client
+	server *server.Mock
 }
 
 func (suite *AccountTestSuite) SetupSuite() {
-	suite.server = mock.NewServer()
-	suite.client = ziggy.NewClientForTesting(suite.T(), suite.server.URL)
+	suite.server = server.NewMock()
+	suite.client = client.NewHTTPForTesting(suite.T(), suite.server.URL)
 }
 
 func (suite *AccountTestSuite) TearDownSuite() {

@@ -1,29 +1,31 @@
-package ziggy
+package client
 
 import (
 	"log"
 	"net/url"
 	"testing"
 
+	"github.com/nickcorin/ziggy"
+
 	"github.com/nickcorin/snorlax"
 )
 
 const DefaultURL = "https://openapi.investec.com"
 
-// Client defines a stateful REST client wrapper for the Investec Open API.
-type Client struct {
+// httpClient defines a stateful REST client wrapper for the Investec Open API.
+type httpClient struct {
 	ClientID     string
 	ClientSecret string
 
 	baseURL   string
 	proxyURL  *url.URL
-	token     *AccessToken
-	transport *snorlax.Client
+	token     *ziggy.AccessToken
+	transport snorlax.Client
 }
 
 // New returns a Client configured with opts.
-func NewClient(clientID, clientSecret string) *Client {
-	return &Client{
+func NewHTTP(clientID, clientSecret string) ziggy.Client {
+	return &httpClient{
 		ClientID:     clientID,
 		ClientSecret: clientSecret,
 
@@ -39,13 +41,13 @@ func NewClient(clientID, clientSecret string) *Client {
 	}
 }
 
-// NewClientForTesting returns a Ziggy client with a custom baseURL.
-func NewClientForTesting(_ *testing.T, baseURL string) *Client {
-	client := NewClient("", "")
-	return client.setBaseURL(baseURL)
+// NewHTTPForTesting returns a Ziggy client with a custom baseURL.
+func NewHTTPForTesting(_ *testing.T, baseURL string) *httpClient {
+	client := NewHTTP("", "")
+	return client.(*httpClient).setBaseURL(baseURL)
 }
 
-func (c *Client) setBaseURL(u string) *Client {
+func (c *httpClient) setBaseURL(u string) *httpClient {
 	baseURL, err := url.Parse(u)
 	if err != nil {
 		// TODO: Add logs to indicate that this failed.
@@ -58,13 +60,13 @@ func (c *Client) setBaseURL(u string) *Client {
 }
 
 // SetToken sets a temporary authorization token on the Ziggy client.
-func (c *Client) SetToken(token *AccessToken) *Client {
+func (c *httpClient) SetToken(token *ziggy.AccessToken) *httpClient {
 	c.token = token
 	return c
 }
 
 // SetProxy sets the proxy URL for the Ziggy client.
-func (c *Client) SetProxy(u string) *Client {
+func (c *httpClient) SetProxy(u string) *httpClient {
 	proxyURL, err := url.Parse(u)
 	if err != nil {
 		log.Println("I DIDN'T SET THE PROXY!")
