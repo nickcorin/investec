@@ -7,7 +7,6 @@ import (
 	"github.com/nickcorin/ziggy"
 )
 
-
 // GetAccounts satisfies the ziggy.Client interface.
 func (c *httpClient) GetAccounts(ctx context.Context) ([]ziggy.Account, error) {
 	res, err := c.transport.Get(ctx, "/za/pb/v1/accounts", nil)

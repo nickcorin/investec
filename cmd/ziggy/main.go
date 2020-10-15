@@ -2,11 +2,9 @@ package main
 
 import (
 	"log"
-	"os"
 
-	"github.com/nickcorin/ziggy"
-	"github.com/nickcorin/ziggy/ziggyd"
-	"github.com/nickcorin/ziggy/ziggyd/credentials"
+	"github.com/nickcorin/ziggy/client"
+	"github.com/nickcorin/ziggy/pkg/credentials"
 )
 
 func main() {
@@ -15,10 +13,5 @@ func main() {
 		log.Fatal(err)
 	}
 
-	client := ziggy.NewClient(creds.Username, creds.Secret)
-
-	err = ziggyd.Run(os.Args[1], client, os.Args[2:]...)
-	if err != nil {
-		log.Fatal(err)
-	}
+	_ = client.NewHTTP(creds.Username, creds.Secret)
 }

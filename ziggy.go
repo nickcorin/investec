@@ -5,6 +5,9 @@ import (
 	"time"
 )
 
+// DefaultURL defines the default HTTP URL for the Investec OpenAPI.
+const DefaultURL = "https://openapi.investec.com"
+
 // AccessToken contains a temporary authorization key.
 type AccessToken struct {
 	Token     string     `json:"access_token"`
@@ -115,7 +118,6 @@ type TransactionsResponse struct {
 		TotalPages int64 `json:"totalPages"`
 	} `json:"meta"`
 }
-
 
 // TransactionStatus describes the current state of a transaction.
 type TransactionStatus string

@@ -2,12 +2,14 @@ package credentials
 
 import (
 	"fmt"
+	"io"
 	"os"
 	"runtime"
 
+	"github.com/nickcorin/ziggy"
+
 	"github.com/docker/docker-credential-helpers/client"
 	"github.com/docker/docker-credential-helpers/credentials"
-	"github.com/nickcorin/ziggy"
 	"golang.org/x/crypto/ssh/terminal"
 )
 
@@ -68,23 +70,59 @@ func Get() (*credentials.Credentials, error) {
 // Prompt provides a way for users to safely input credentials on the command
 // line.
 func Prompt() (*credentials.Credentials, error) {
-	fmt.Fprint(os.Stdin, "Client ID: ")
-	clientBytes, err := terminal.ReadPassword(int(os.Stdin.Fd()))
+	id, err := prompt("Client ID: ")
 	if err != nil {
 		return nil, err
 	}
 
-	fmt.Fprint(os.Stdin, "Client Secret :")
-	secretBytes, err := terminal.ReadPassword(int(os.Stdin.Fd()))
+	secret, err := prompt("Client Secret: ")
 	if err != nil {
 		return nil, err
 	}
 
 	return &credentials.Credentials{
 		ServerURL: ziggy.DefaultURL,
-		Username:  string(clientBytes),
-		Secret:    string(secretBytes),
+		Username:  string(id),
+		Secret:    string(secret),
 	}, nil
+}
+
+func prompt(prompt string) ([]byte, error) {
+	fd := int(os.Stdin.Fd())
+	if terminal.IsTerminal(fd) {
+		fmt.Fprint(os.Stdout, prompt)
+		pw, err := terminal.ReadPassword(fd)
+		if err != nil {
+			return nil, err
+		}
+		fmt.Fprintln(os.Stdout)
+		return pw, nil
+	}
+
+	var b [1]byte
+	var pw []byte
+	for {
+		n, err := os.Stdin.Read(b[:])
+		// terminal.ReadPassword discards any '\r', so we do the same
+		if n > 0 && b[0] != '\r' {
+			if b[0] == '\n' {
+				return pw, nil
+			}
+			pw = append(pw, b[0])
+			// limit size, so that a wrong input won't fill up the memory
+			if len(pw) > 1024 {
+				return nil, fmt.Errorf("password too long")
+			}
+		}
+		if err != nil {
+			// terminal.ReadPassword accepts EOF-terminated passwords
+			// if non-empty, so we do the same
+			if err == io.EOF && len(pw) > 0 {
+				err = nil
+			}
+			return pw, err
+		}
+	}
 }
 
 // Store saves the provided credentials in the OS specific secrets manager.

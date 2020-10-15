@@ -7,7 +7,7 @@ import (
 	"github.com/nickcorin/ziggy"
 	"github.com/nickcorin/ziggy/client"
 	"github.com/nickcorin/ziggy/server"
-	
+
 	"github.com/stretchr/testify/suite"
 )
 
